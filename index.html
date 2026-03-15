@@ -33,6 +33,7 @@
                 </button>
             </div>
         </div>
+        <div class="mobile-nav-overlay"></div>
         <div class="mobile-nav">
             <ul>
                 <li><a href="#about">회사소개</a></li>
@@ -46,7 +47,12 @@
 
     <!-- Hero Section -->
     <section id="hero" class="hero-section">
-        <div class="hero-bg" style="background-image: url('./images/hero_bg.png');"></div>
+        <!-- 배경 동영상 (서울대 홈페이지와 같은 역동적 연출) -->
+        <video class="hero-video-bg" autoplay loop muted playsinline poster="./images/hero_bg.png">
+            <!-- 임시 대체 영상(AI/SW/연구개발 느낌). 추후 실제 기업/현장 시연 영상(MP4)으로 src를 교체해주세요. -->
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-across-multiple-screens-42750-large.mp4" type="video/mp4">
+            브라우저가 동영상을 지원하지 않습니다.
+        </video>
         <div class="hero-overlay"></div>
         <div class="container hero-content">
             <span class="badge">Since 2023.11</span>
@@ -67,16 +73,16 @@
                 <div class="stat-label">설립연도</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" data-target="100">0</div>
-                <div class="stat-label">고객 만족도 (%)</div>
+                <div class="stat-number" data-target="20">0</div>
+                <div class="stat-label">누적 수행 프로젝트 (건)</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" data-target="1">0</div>
-                <div class="stat-label">시장 점유율 목표 (위)</div>
+                <div class="stat-number" data-target="15">0</div>
+                <div class="stat-label">전시 납품 실적 (건)</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" data-target="24">0</div>
-                <div class="stat-label">무결점 기술 지원 (hrs)</div>
+                <div class="stat-number" data-target="5">0</div>
+                <div class="stat-label">검증 진출 핵심 산업군 (분야)</div>
             </div>
         </div>
     </section>

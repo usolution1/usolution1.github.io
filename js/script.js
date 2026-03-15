@@ -14,31 +14,39 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- Mobile Navigation Toggle --- */
     const menuToggle = document.querySelector('.menu-toggle');
     const mobileNav = document.querySelector('.mobile-nav');
+    const mobileNavOverlay = document.querySelector('.mobile-nav-overlay');
     const mobileLinks = document.querySelectorAll('.mobile-nav a');
     let isMenuOpen = false;
 
-    menuToggle.addEventListener('click', () => {
-        isMenuOpen = !isMenuOpen;
-        mobileNav.classList.toggle('open', isMenuOpen);
-        
-        // Transform hamburger icon to X (simplified toggle)
-        const spans = menuToggle.querySelectorAll('span');
-        if (isMenuOpen) {
-            spans[0].style.transform = 'translateY(8px) rotate(45deg)';
-            spans[1].style.opacity = '0';
-            spans[2].style.transform = 'translateY(-8px) rotate(-45deg)';
-            spans.forEach(s => s.style.background = '#0a1930');
+    function toggleMenu(forceClose = false) {
+        if (forceClose) {
+            isMenuOpen = false;
         } else {
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
-            spans.forEach(s => s.style.background = header.classList.contains('scrolled') ? '#0a1930' : '#fff');
+            isMenuOpen = !isMenuOpen;
         }
-    });
+        
+        mobileNav.classList.toggle('open', isMenuOpen);
+        menuToggle.classList.toggle('open', isMenuOpen);
+        if (mobileNavOverlay) {
+            mobileNavOverlay.classList.toggle('open', isMenuOpen);
+        }
+        
+        if (isMenuOpen) {
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+
+    menuToggle.addEventListener('click', () => toggleMenu());
+
+    if (mobileNavOverlay) {
+        mobileNavOverlay.addEventListener('click', () => toggleMenu(true));
+    }
 
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
-            menuToggle.click();
+            if (isMenuOpen) toggleMenu(true);
         });
     });
 
