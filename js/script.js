@@ -141,4 +141,75 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    /* --- Form Submission Handling (Fix Encoding) --- */
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const fd = new FormData(contactForm);
+            const company = fd.get('회사명') || '';
+            const name = fd.get('성함') || '';
+            const phone1 = fd.get('연락처1') || '';
+            const phone2 = fd.get('연락처2') || '';
+            const phone3 = fd.get('연락처3') || '';
+            const email = fd.get('이메일') || '';
+            const message = fd.get('문의내용') || '';
+            const path = fd.get('알게된경로') || '선택안함';
+            const pathOther = fd.get('기타입력') || '';
+            const marketing = fd.get('마케팅동의') ? '동의' : '미동의';
+            
+            let pathInfo = path;
+            if (path === '기타' && pathOther) {
+                pathInfo += ` (${pathOther})`;
+            }
+
+            // 방문자 화면에 아웃룩 창이 뜨지 않도록 FormSubmit 백그라운드 전송(AJAX) 방식 적용
+            const submitBtn = contactForm.querySelector('.btn-submit');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = '전송 중...';
+            submitBtn.disabled = true;
+
+            const payload = {
+                _subject: `[유솔루션 홈페이지 문의] ${company} - ${name}`,
+                _replyto: email,      // 사용자 이메일로 바로 회신 가능
+                _captcha: "false",    // 홈페이지 방문자(불특정 다수)에게 봇 방지 인증(캡챠)이 뜨지 않게 차단
+                회사명: company,
+                성함: name,
+                연락처: `${phone1}-${phone2}-${phone3}`,
+                답변받을이메일: email,
+                알게된경로: pathInfo,
+                마케팅수신동의: marketing,
+                문의내용: message
+            };
+
+            const subject = `[프로젝트 문의] ${company} - ${name}`;
+            const body = `회사명: ${company}
+성함: ${name}
+연락처: ${phone1}-${phone2}-${phone3}
+이메일: ${email}
+유솔루션을 알게 된 경로: ${pathInfo}
+마케팅 정보 수신 동의: ${marketing}
+
+[문의내용]
+${message}`;
+
+            // 네이버 등 특정 국내 포털 메일 스팸 전면 차단 이슈로, 모든 환경에서 안정적으로 전송을 보장하는 아웃룩/메일앱(한글 인코딩 처리) 방식으로 원상 복구합니다.
+            const mailtoLink = `mailto:syk434@naver.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+
+            const modal = document.getElementById('contactModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => { modal.style.display = 'none'; }, 300);
+                document.body.style.overflow = '';
+            }
+            contactForm.reset();
+            
+            // 버튼 상태 복구
+            submitBtn.innerText = originalBtnText;
+            submitBtn.disabled = false;
+        });
+    }
 });
